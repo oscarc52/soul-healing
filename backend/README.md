@@ -212,8 +212,25 @@ Then run the Ritual flow from the existing UI.
 
 ## Current Limits
 
-- Current storage is in memory; data is lost when the process restarts.
+- Current storage uses SQLite persistence through Node.js `node:sqlite`.
 - Current insight generation is rule-based mock logic; AI is not connected.
-- Database persistence is not connected.
 - Front-end integration is available for local testing behind the existing development flag; production integration is not finalized.
 - Audio is not saved.
+
+## v0.2 SQLite Persistence
+
+The backend now stores Ritual sessions, tags, feedback, and soft-delete state in SQLite.
+
+- Runtime requirement: Node.js 24+.
+- SQLite implementation: Node.js built-in `node:sqlite`.
+- `node:sqlite` may print an experimental warning in the current runtime.
+- Database file path: `backend/data/xinhu.sqlite`.
+- SQLite database files are local runtime data and must not be committed.
+- Saved sessions now remain available after the service restarts.
+- Deletes are soft deletes: records are marked deleted instead of being physically removed.
+
+To clear local development data:
+
+1. Stop the backend service.
+2. Delete `backend/data/xinhu.sqlite`.
+3. Start the backend service again.

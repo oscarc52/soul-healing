@@ -16,7 +16,8 @@ import {
   listSessions,
   saveSession,
   updateFeedback
-} from './store/memoryStore.js';
+} from './store/sqliteStore.js';
+import { closeDatabase, initDatabase } from './db/sqlite.js';
 import { validateFeedbackPayload } from './utils/feedback.js';
 import { buildPatterns } from './utils/patterns.js';
 
@@ -446,8 +447,23 @@ export function buildServer() {
 }
 
 function start() {
+  initDatabase();
+
   const server = buildServer();
   const port = Number.parseInt(process.env.PORT || String(DEFAULT_PORT), 10);
+  let isShuttingDown = false;
+
+  function shutdown() {
+    if (isShuttingDown) {
+      return;
+    }
+
+    isShuttingDown = true;
+    server.close(() => {
+      closeDatabase();
+      process.exit(0);
+    });
+  }
 
   server.listen(port, () => {
     console.log(`Xinhu backend listening on http://localhost:${port}`);
@@ -455,8 +471,13 @@ function start() {
 
   server.on('error', (error) => {
     console.error(error);
+    closeDatabase();
     process.exit(1);
   });
+
+  process.on('SIGINT', shutdown);
+  process.on('SIGTERM', shutdown);
+  process.on('exit', closeDatabase);
 }
 
 start();
