@@ -75,7 +75,7 @@ Returns service health.
 
 ### POST /api/ritual/insight
 
-Generates a mock Ritual insight from transcript text. Normal records are saved to in-memory storage. Crisis records are not saved.
+Generates a Ritual insight from transcript text. AI integration is currently a disabled skeleton, so the service falls back to rule-based mock insight generation. Normal records are saved to SQLite persistence. Crisis records are not saved.
 
 ### GET /api/ritual/sessions
 
@@ -90,7 +90,7 @@ The list does not return raw `transcript`.
 
 ### GET /api/ritual/patterns
 
-Returns rule-based 7-day or 30-day patterns from in-memory sessions.
+Returns rule-based 7-day or 30-day patterns from SQLite sessions.
 
 Query:
 
@@ -99,7 +99,7 @@ Query:
 
 ### DELETE /api/user/data
 
-Soft-deletes all in-memory sessions for an anonymous user.
+Soft-deletes all SQLite sessions for an anonymous user.
 
 ### DELETE /api/ritual/sessions/:sessionId
 
@@ -205,7 +205,6 @@ Then run the Ritual flow from the existing UI.
   - session 保存
   - 7 天模式统计
 - 当前仍未接：
-  - 数据库
   - AI
   - 正式上线隐私口径
   - 生产部署
@@ -234,3 +233,33 @@ To clear local development data:
 1. Stop the backend service.
 2. Delete `backend/data/xinhu.sqlite`.
 3. Start the backend service again.
+
+## v0.3 AI Insight Skeleton
+
+The backend now has an AI insight integration skeleton, but real AI calls are disabled by default.
+
+- `AI_ENABLED=false` keeps the existing mock insight flow.
+- If `AI_ENABLED=true` but `AI_API_KEY`, `AI_BASE_URL`, or `AI_MODEL` is missing, the backend falls back to mock insight generation.
+- The current provider layer is a skeleton and does not call a real model yet.
+- AI failures must not break the API contract; the backend falls back to mock insight generation.
+- Local crisis keyword detection runs before any AI provider logic.
+- Do not commit `.env`.
+- Do not put real API keys in source code, README examples, or test scripts.
+- Future real AI usage may send `transcript` content to a third-party model provider. The formal privacy wording must be updated before enabling AI in production.
+
+Suggested local environment fields:
+
+```env
+AI_PROVIDER=openai_compatible
+AI_API_KEY=
+AI_BASE_URL=
+AI_MODEL=
+AI_TIMEOUT_MS=12000
+AI_ENABLED=false
+```
+
+Run the fallback integration check:
+
+```bash
+npm run ai:fallback
+```

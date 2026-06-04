@@ -114,7 +114,8 @@ export function saveSession({
   timezone,
   insight,
   emotionLabel,
-  tags
+  tags,
+  riskLevel = 'normal'
 }) {
   const db = getDb();
   const sessionId = createSessionId();
@@ -151,7 +152,7 @@ export function saveSession({
       insight.pattern,
       insight.question,
       emotionLabel,
-      'normal',
+      riskLevel,
       1,
       0,
       0,
@@ -188,7 +189,7 @@ export function saveSession({
     insight: { ...insight },
     emotionLabel,
     tags: safeTags,
-    riskLevel: 'normal',
+    riskLevel,
     saved: true,
     feedback: null,
     isDeleted: false,

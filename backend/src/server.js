@@ -5,10 +5,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import {
   compactText,
-  hasCrisisRisk,
-  normalizeTranscript,
-  pickMockInsight
+  normalizeTranscript
 } from './utils/insightMock.js';
+import { generateInsight } from './ai/insightService.js';
 import {
   deleteAllSessions,
   deleteSession,
@@ -238,26 +237,32 @@ async function handleInsight(request, response) {
   const durationSeconds = normalizeDurationSeconds(body.durationSeconds);
   const timezone = normalizeTimezone(body.timezone);
 
-  if (hasCrisisRisk(transcript)) {
+  const result = await generateInsight({
+    transcript,
+    anonymousId,
+    durationSeconds,
+    timezone
+  });
+
+  if (result.riskLevel === 'crisis') {
     sendJson(response, 200, {
       ok: true,
       data: {
         sessionId: `session_${Date.now()}`,
         insight: null,
         meta: {
-          emotionLabel: '混合',
-          tags: [],
+          emotionLabel: result.emotionLabel,
+          tags: result.tags,
           riskLevel: 'crisis',
           saved: false
         },
-        safetyMessage: '你刚才提到的内容包含较高现实风险。请立刻联系身边可信任的人，或当地紧急援助渠道。'
+        safetyMessage: result.safetyMessage
       },
       error: null
     });
     return;
   }
 
-  const result = pickMockInsight(transcript);
   const session = saveSession({
     anonymousId,
     transcript,
@@ -265,7 +270,8 @@ async function handleInsight(request, response) {
     timezone,
     insight: result.insight,
     emotionLabel: result.emotionLabel,
-    tags: result.tags
+    tags: result.tags,
+    riskLevel: result.riskLevel
   });
 
   sendJson(response, 200, {
@@ -276,7 +282,7 @@ async function handleInsight(request, response) {
       meta: {
         emotionLabel: result.emotionLabel,
         tags: result.tags,
-        riskLevel: 'normal',
+        riskLevel: result.riskLevel,
         saved: true
       }
     },
