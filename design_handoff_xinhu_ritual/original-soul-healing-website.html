@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stillwater · 心湖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&family=Noto+Sans+SC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sage:#8A9E8C;--sage-light:#C5D4C2;--sage-pale:#EFF4EE;
+  --stone:#B8A99A;--stone-light:#DDD3CB;--stone-pale:#F5F0EC;
+  --ink:#2C2C2A;--ink-soft:#4A4845;--mist:#7A8A88;
+  --cream:#FAF8F4;--white:#FEFEFE;--warm:#E8A87C;
+  --font-serif:'Lora','Noto Serif SC',serif;
+  --font-body:'Noto Sans SC',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font-body);background:var(--cream);color:var(--ink);overflow-x:hidden;font-weight:300;line-height:1.8;}
+
+/* ── GLOBAL NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.25rem 3rem;
+  background:rgba(250,248,244,0.88);
+  backdrop-filter:blur(14px);
+  border-bottom:0.5px solid rgba(138,158,140,0.2);
+  transition:all 0.4s ease;
+}
+.nav-logo{font-family:var(--font-serif);font-size:1.1rem;font-weight:400;color:var(--ink);letter-spacing:0.04em;display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;}
+.nav-logo .dot{width:8px;height:8px;border-radius:50%;background:var(--sage);animation:breathe 4s ease-in-out infinite;}
+@keyframes breathe{0%,100%{opacity:0.4;transform:scale(1);}50%{opacity:1;transform:scale(1.3);}}
+.nav-right{display:flex;align-items:center;gap:1.5rem;}
+.nav-skip{font-size:0.82rem;color:var(--mist);cursor:pointer;letter-spacing:0.04em;transition:color 0.3s;text-decoration:none;}
+.nav-skip:hover{color:var(--sage);}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{text-decoration:none;font-size:0.82rem;font-weight:300;color:var(--ink-soft);letter-spacing:0.05em;transition:color 0.3s;}
+.nav-links a:hover{color:var(--sage);}
+/* nav-links hidden on landing, shown on main site */
+.nav-links{display:none;}
+.site-mode .nav-links{display:flex;}
+.site-mode .nav-skip{display:none;}
+
+/* ── BUTTONS ── */
+.btn-primary{background:var(--ink);color:var(--cream);padding:0.85rem 2.2rem;border-radius:100px;font-size:0.9rem;font-weight:400;cursor:pointer;border:none;letter-spacing:0.04em;transition:all 0.35s ease;text-decoration:none;display:inline-block;font-family:var(--font-body);}
+.btn-primary:hover{background:var(--sage);transform:translateY(-2px);box-shadow:0 8px 30px rgba(138,158,140,0.35);}
+.btn-ghost{color:var(--ink-soft);font-size:0.88rem;text-decoration:none;display:inline-flex;align-items:center;gap:6px;cursor:pointer;background:none;border:none;font-family:var(--font-body);transition:color 0.3s;}
+.btn-ghost:hover{color:var(--sage);}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ══════════════════════════════════════════
+   LANDING MODE  (screens: hero → scroll site)
+   ══════════════════════════════════════════ */
+#landing{display:block;}
+#main-site{display:none;}
+
+/* ── HERO ── */
+#hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:8rem 2rem 4rem;position:relative;overflow:hidden;
+}
+.hero-bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse 80% 60% at 20% 80%,rgba(138,158,140,0.12) 0%,transparent 60%),
+  radial-gradient(ellipse 60% 80% at 80% 20%,rgba(184,169,154,0.1) 0%,transparent 60%),
+  radial-gradient(ellipse 40% 40% at 50% 50%,rgba(232,168,124,0.06) 0%,transparent 60%);}
+.ripple-container{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:900px;height:350px;pointer-events:none;overflow:hidden;}
+.ripple{position:absolute;bottom:-60px;left:50%;transform:translateX(-50%);border-radius:50%;border:1px solid rgba(138,158,140,0.25);animation:ripple-out 8s ease-out infinite;}
+.ripple:nth-child(1){width:200px;height:100px;animation-delay:0s;}
+.ripple:nth-child(2){width:400px;height:180px;animation-delay:1.5s;}
+.ripple:nth-child(3){width:600px;height:250px;animation-delay:3s;}
+.ripple:nth-child(4){width:800px;height:320px;animation-delay:4.5s;}
+@keyframes ripple-out{0%{opacity:0.6;transform:translateX(-50%) scaleX(1);}100%{opacity:0;transform:translateX(-50%) scaleX(1.1);}}
+.hero-tag{display:inline-block;font-size:0.74rem;font-weight:400;letter-spacing:0.15em;text-transform:uppercase;color:var(--sage);border:0.5px solid var(--sage-light);padding:0.35rem 1rem;border-radius:100px;margin-bottom:2.5rem;animation:fadeUp 1s ease both;}
+.hero-title{font-family:var(--font-serif);font-size:clamp(2.8rem,7vw,5.5rem);font-weight:400;line-height:1.2;color:var(--ink);margin-bottom:1.5rem;animation:fadeUp 1s ease 0.2s both;}
+.hero-title em{font-style:italic;color:var(--sage);}
+.hero-sub{font-size:1.05rem;color:var(--ink-soft);max-width:460px;line-height:1.9;margin-bottom:3rem;font-weight:300;animation:fadeUp 1s ease 0.4s both;}
+.hero-actions{display:flex;gap:1rem;align-items:center;animation:fadeUp 1s ease 0.6s both;}
+.hero-scroll-hint{position:absolute;bottom:2.5rem;display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0.4;animation:fadeUp 1s ease 1s both;}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,transparent,var(--sage));animation:scroll-pulse 2s ease-in-out infinite;}
+@keyframes scroll-pulse{0%,100%{transform:scaleY(0.6) translateY(-5px);}50%{transform:scaleY(1) translateY(5px);}}
+.scroll-text{font-size:0.7rem;letter-spacing:0.12em;color:var(--mist);}
+
+/* ── TRUST STRIP ── */
+.trust-strip{background:var(--sage-pale);border-top:0.5px solid var(--sage-light);border-bottom:0.5px solid var(--sage-light);padding:1.25rem 3rem;display:flex;align-items:center;justify-content:center;gap:3rem;flex-wrap:wrap;}
+.trust-item{display:flex;align-items:center;gap:8px;font-size:0.82rem;color:var(--mist);letter-spacing:0.04em;}
+.trust-dot{width:6px;height:6px;border-radius:50%;background:var(--sage);opacity:0.6;}
+
+/* ── SECTION BASE ── */
+section{padding:7rem 2rem;}
+.container{max-width:1100px;margin:0 auto;}
+.section-label{font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sage);font-weight:400;margin-bottom:1rem;}
+.section-title{font-family:var(--font-serif);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:400;color:var(--ink);line-height:1.3;margin-bottom:1.2rem;}
+.section-desc{font-size:1rem;color:var(--ink-soft);max-width:500px;line-height:1.9;font-weight:300;}
+
+/* ── HOW IT WORKS ── */
+#how{background:var(--white);}
+.steps-layout{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;margin-top:4rem;}
+.steps-list{display:flex;flex-direction:column;gap:2.5rem;}
+.step{display:flex;gap:1.5rem;align-items:flex-start;opacity:0.4;transition:opacity 0.5s;cursor:pointer;}
+.step.active{opacity:1;}
+.step-num{width:40px;height:40px;border-radius:50%;border:1px solid var(--sage-light);display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:0.85rem;color:var(--sage);flex-shrink:0;transition:all 0.4s;}
+.step.active .step-num{background:var(--sage);color:white;border-color:var(--sage);}
+.step-content h3{font-family:var(--font-serif);font-size:1.1rem;font-weight:400;margin-bottom:0.4rem;color:var(--ink);}
+.step-content p{font-size:0.9rem;color:var(--ink-soft);line-height:1.8;}
+.step-visual{position:relative;aspect-ratio:3/4;background:var(--sage-pale);border-radius:2rem;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.phone-mockup{width:220px;background:var(--white);border-radius:2.5rem;padding:1.5rem 1.2rem;box-shadow:0 30px 80px rgba(44,44,42,0.12);position:relative;z-index:2;}
+.phone-bar{width:60px;height:4px;background:var(--stone-light);border-radius:2px;margin:0 auto 1.5rem;}
+.phone-mic{width:60px;height:60px;border-radius:50%;background:var(--sage-pale);border:2px solid var(--sage-light);display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;position:relative;}
+.phone-mic-rings{position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(138,158,140,0.3);animation:mic-ring 2s ease-out infinite;}
+.phone-mic-rings:nth-child(2){inset:-16px;animation-delay:0.5s;border-color:rgba(138,158,140,0.15);}
+@keyframes mic-ring{0%{opacity:1;transform:scale(0.95);}100%{opacity:0;transform:scale(1.3);}}
+.mic-icon{font-size:1.4rem;}
+.phone-timer{text-align:center;font-family:var(--font-serif);font-size:0.75rem;color:var(--mist);margin-bottom:1rem;}
+.phone-wave{height:40px;display:flex;align-items:center;justify-content:center;gap:3px;}
+.wave-bar{width:3px;background:var(--sage-light);border-radius:2px;animation:wave-anim 1s ease-in-out infinite;}
+.wave-bar:nth-child(1){height:8px;animation-delay:0s;}
+.wave-bar:nth-child(2){height:20px;animation-delay:0.1s;}
+.wave-bar:nth-child(3){height:30px;animation-delay:0.2s;background:var(--sage);}
+.wave-bar:nth-child(4){height:22px;animation-delay:0.3s;}
+.wave-bar:nth-child(5){height:35px;animation-delay:0.4s;background:var(--sage);}
+.wave-bar:nth-child(6){height:18px;animation-delay:0.5s;}
+.wave-bar:nth-child(7){height:12px;animation-delay:0.6s;}
+.wave-bar:nth-child(8){height:28px;animation-delay:0.7s;}
+.wave-bar:nth-child(9){height:8px;animation-delay:0.8s;}
+@keyframes wave-anim{0%,100%{transform:scaleY(0.6);opacity:0.5;}50%{transform:scaleY(1);opacity:1;}}
+
+/* ── FEATURES ── */
+#features{background:var(--cream);}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:4rem;}
+.feat-card{background:var(--white);border:0.5px solid rgba(138,158,140,0.2);border-radius:1.5rem;padding:2rem;transition:transform 0.3s,box-shadow 0.3s;}
+.feat-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(138,158,140,0.15);}
+.feat-card.large{grid-column:span 2;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center;}
+.feat-icon{width:44px;height:44px;border-radius:12px;background:var(--sage-pale);display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:1.2rem;}
+.feat-card h3{font-family:var(--font-serif);font-size:1.15rem;font-weight:400;color:var(--ink);margin-bottom:0.6rem;line-height:1.4;}
+.feat-card p{font-size:0.88rem;color:var(--ink-soft);line-height:1.85;}
+.insight-preview{background:var(--sage-pale);border-radius:1rem;padding:1.5rem;}
+.insight-tag{font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);margin-bottom:0.6rem;}
+.insight-text{font-family:var(--font-serif);font-size:0.95rem;color:var(--ink);line-height:1.7;font-style:italic;margin-bottom:0.8rem;}
+.insight-q{font-size:0.82rem;color:var(--mist);border-top:0.5px solid var(--sage-light);padding-top:0.8rem;margin-top:0.5rem;}
+
+/* ── PRIVACY ── */
+#privacy{background:var(--ink);color:var(--cream);}
+#privacy .section-label{color:var(--sage-light);}
+#privacy .section-title{color:var(--cream);}
+.privacy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:4rem;}
+.priv-card{border:0.5px solid rgba(138,158,140,0.25);border-radius:1.2rem;padding:1.75rem;}
+.priv-icon{font-size:1.5rem;margin-bottom:1rem;opacity:0.8;}
+.priv-card h4{font-family:var(--font-serif);font-size:1rem;font-weight:400;color:var(--cream);margin-bottom:0.5rem;}
+.priv-card p{font-size:0.84rem;color:rgba(250,248,244,0.5);line-height:1.8;}
+
+/* ── VOICES ── */
+#voices{background:var(--stone-pale);}
+.voices-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:4rem;}
+.voice-card{background:var(--white);border-radius:1.5rem;padding:1.75rem;border:0.5px solid rgba(184,169,154,0.2);}
+.quote-mark{font-family:var(--font-serif);font-size:3rem;line-height:1;color:var(--sage-light);margin-bottom:0.5rem;}
+.voice-text{font-family:var(--font-serif);font-size:0.95rem;color:var(--ink);line-height:1.8;font-style:italic;margin-bottom:1.2rem;}
+.voice-meta{display:flex;align-items:center;gap:10px;}
+.voice-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:500;flex-shrink:0;}
+.voice-name{font-size:0.85rem;font-weight:400;color:var(--ink);}
+.voice-role{font-size:0.75rem;color:var(--mist);}
+
+/* ── DIRECTIONS (site mode) ── */
+#directions-site{background:var(--white);}
+.dir-tabs{display:flex;gap:0;border:0.5px solid rgba(138,158,140,0.25);border-radius:100px;padding:4px;width:fit-content;margin:3rem auto 0;background:var(--sage-pale);}
+.dir-tab{padding:0.55rem 1.6rem;border-radius:100px;font-size:0.85rem;font-weight:300;color:var(--mist);cursor:pointer;border:none;background:transparent;font-family:var(--font-body);transition:all 0.3s ease;white-space:nowrap;letter-spacing:0.02em;}
+.dir-tab.active{background:var(--white);color:var(--ink);box-shadow:0 2px 12px rgba(44,44,42,0.08);}
+.dir-panels{margin-top:3.5rem;position:relative;}
+.dir-panel{display:none;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;animation:fadeUp 0.5s ease both;}
+.dir-panel.active{display:grid;}
+.dir-panel-text .dir-eyebrow{font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1rem;font-weight:400;}
+.dir-panel-text h3{font-family:var(--font-serif);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:400;line-height:1.3;color:var(--ink);margin-bottom:1rem;}
+.dir-panel-text p{font-size:0.95rem;color:var(--ink-soft);line-height:1.9;margin-bottom:1.5rem;}
+.dir-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.dir-tag{font-size:0.78rem;padding:4px 14px;border-radius:100px;border:0.5px solid;font-weight:300;letter-spacing:0.04em;}
+.dir-visual{border-radius:2rem;overflow:hidden;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;position:relative;}
+/* ritual */
+.ritual-visual{background:linear-gradient(135deg,#EFF4EE 0%,#F5F0EC 100%);flex-direction:column;gap:1.5rem;}
+.ritual-circle{width:120px;height:120px;border-radius:50%;border:1px solid var(--sage-light);display:flex;align-items:center;justify-content:center;font-size:2.5rem;position:relative;}
+.ritual-ring{position:absolute;inset:-12px;border-radius:50%;border:0.5px solid rgba(138,158,140,0.3);animation:breathe-ring 4s ease-in-out infinite;}
+.ritual-ring:nth-child(2){inset:-24px;animation-delay:1s;opacity:0.5;}
+@keyframes breathe-ring{0%,100%{transform:scale(0.97);opacity:0.5;}50%{transform:scale(1.03);opacity:1;}}
+.ritual-steps{display:flex;gap:12px;align-items:center;}
+.r-step{background:var(--white);border-radius:12px;padding:8px 14px;font-size:0.75rem;color:var(--ink-soft);border:0.5px solid var(--sage-light);display:flex;align-items:center;gap:6px;}
+/* data */
+.data-visual{background:linear-gradient(135deg,#EFF4EE 0%,#E6F1FB 100%);flex-direction:column;padding:2rem;gap:1rem;}
+.data-chart{width:100%;background:var(--white);border-radius:1rem;padding:1.2rem;}
+.data-chart-title{font-size:0.7rem;letter-spacing:0.1em;color:var(--mist);text-transform:uppercase;margin-bottom:1rem;}
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:80px;}
+.chart-bar{flex:1;border-radius:4px 4px 0 0;animation:bar-grow 1s ease both;}
+@keyframes bar-grow{from{transform:scaleY(0);transform-origin:bottom;}to{transform:scaleY(1);}}
+.chart-bar:nth-child(1){height:35%;background:#C5D4C2;animation-delay:.1s}
+.chart-bar:nth-child(2){height:55%;background:#C5D4C2;animation-delay:.15s}
+.chart-bar:nth-child(3){height:45%;background:#C5D4C2;animation-delay:.2s}
+.chart-bar:nth-child(4){height:70%;background:#8A9E8C;animation-delay:.25s}
+.chart-bar:nth-child(5){height:60%;background:#8A9E8C;animation-delay:.3s}
+.chart-bar:nth-child(6){height:80%;background:#8A9E8C;animation-delay:.35s}
+.chart-bar:nth-child(7){height:90%;background:#534AB7;animation-delay:.4s}
+.data-insight-row{display:flex;gap:8px;}
+.data-chip{flex:1;background:var(--white);border-radius:10px;padding:10px;text-align:center;font-size:0.75rem;color:var(--ink-soft);}
+.data-chip strong{display:block;font-size:1.1rem;font-weight:500;color:var(--ink);margin-bottom:2px;}
+/* community */
+.community-visual{background:linear-gradient(135deg,#F5F0EC 0%,#FBEAF0 100%);flex-direction:column;padding:2rem;gap:10px;}
+.comm-bubble{background:var(--white);border-radius:1rem 1rem 1rem 0;padding:10px 14px;max-width:85%;align-self:flex-start;border:0.5px solid rgba(184,169,154,0.2);}
+.comm-bubble.right{border-radius:1rem 1rem 0 1rem;align-self:flex-end;background:var(--sage-pale);border-color:var(--sage-light);}
+.comm-bubble .text{font-size:0.8rem;color:var(--ink);line-height:1.6;font-style:italic;}
+.comm-bubble .meta{font-size:0.68rem;color:var(--mist);margin-top:4px;}
+.comm-heart{color:var(--stone);}
+
+/* ── FOOTER ── */
+footer{background:var(--ink);color:rgba(250,248,244,0.5);padding:3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer-logo{font-family:var(--font-serif);font-size:1.1rem;color:var(--cream);margin-bottom:0.3rem;}
+.footer-tagline{font-size:0.8rem;}
+.footer-links{display:flex;gap:2rem;list-style:none;}
+.footer-links a{text-decoration:none;color:rgba(250,248,244,0.5);font-size:0.82rem;transition:color 0.3s;}
+.footer-links a:hover{color:var(--sage-light);}
+
+/* ══════════════════════════════════════════
+   ONBOARDING OVERLAY
+   ══════════════════════════════════════════ */
+#onboarding{
+  position:fixed;inset:0;z-index:150;
+  background:var(--cream);
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:6rem 2rem 3rem;
+  animation:fadeIn 0.5s ease;
+}
+#onboarding.active{display:flex;}
+
+.ob-step{display:none;flex-direction:column;align-items:center;text-align:center;max-width:560px;width:100%;animation:fadeUp 0.5s ease both;}
+.ob-step.active{display:flex;}
+
+/* Step 1 — 开始你的旅程 */
+.ob-title{font-family:var(--font-serif);font-size:clamp(2rem,5vw,3rem);font-weight:400;line-height:1.3;color:var(--ink);margin-bottom:1rem;}
+.ob-title em{font-style:italic;color:var(--sage);}
+.ob-sub{font-size:1rem;color:var(--ink-soft);line-height:1.9;margin-bottom:3rem;max-width:420px;}
+
+.ob-big-btn{
+  background:var(--ink);color:var(--cream);
+  padding:1.1rem 3rem;border-radius:100px;
+  font-size:1rem;font-weight:400;cursor:pointer;border:none;
+  letter-spacing:0.04em;transition:all 0.35s ease;
+  font-family:var(--font-body);
+  margin-bottom:1.2rem;
+}
+.ob-big-btn:hover{background:var(--sage);transform:translateY(-2px);box-shadow:0 8px 30px rgba(138,158,140,0.35);}
+
+.ob-next-hint{font-size:0.8rem;color:var(--mist);letter-spacing:0.04em;}
+
+/* Step 2 — 选择疗愈路径 */
+.ob-path-title{font-family:var(--font-serif);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:400;line-height:1.3;color:var(--ink);margin-bottom:0.8rem;}
+.ob-path-sub{font-size:0.95rem;color:var(--ink-soft);margin-bottom:2.5rem;}
+
+.path-cards{display:flex;flex-direction:column;gap:12px;width:100%;max-width:480px;}
+.path-card{
+  background:var(--white);border:1px solid rgba(138,158,140,0.2);
+  border-radius:1.2rem;padding:1.2rem 1.5rem;
+  display:flex;align-items:center;gap:1rem;
+  cursor:pointer;transition:all 0.3s ease;text-align:left;
+}
+.path-card:hover{border-color:var(--sage);transform:translateX(4px);box-shadow:0 8px 30px rgba(138,158,140,0.15);}
+.path-card.selected{border-color:var(--sage);background:var(--sage-pale);}
+.path-icon{font-size:1.6rem;flex-shrink:0;width:44px;text-align:center;}
+.path-text h4{font-family:var(--font-serif);font-size:1rem;font-weight:400;color:var(--ink);margin-bottom:2px;}
+.path-text p{font-size:0.8rem;color:var(--mist);line-height:1.5;}
+.path-arrow{margin-left:auto;color:var(--sage-light);font-size:1.1rem;transition:transform 0.3s;}
+.path-card:hover .path-arrow{transform:translateX(4px);color:var(--sage);}
+
+.ob-actions{display:flex;gap:1rem;align-items:center;margin-top:2rem;flex-wrap:wrap;justify-content:center;}
+.ob-enter-btn{background:var(--ink);color:var(--cream);padding:0.8rem 2.2rem;border-radius:100px;font-size:0.9rem;cursor:pointer;border:none;letter-spacing:0.04em;transition:all 0.3s;font-family:var(--font-body);opacity:0.4;pointer-events:none;}
+.ob-enter-btn.ready{opacity:1;pointer-events:all;}
+.ob-enter-btn.ready:hover{background:var(--sage);}
+.ob-skip-path{font-size:0.82rem;color:var(--mist);cursor:pointer;background:none;border:none;font-family:var(--font-body);transition:color 0.3s;padding:0.5rem;}
+.ob-skip-path:hover{color:var(--sage);}
+
+/* progress dots */
+.ob-dots{display:flex;gap:8px;margin-bottom:2rem;}
+.ob-dot{width:6px;height:6px;border-radius:50%;background:var(--sage-light);transition:all 0.3s;}
+.ob-dot.active{background:var(--sage);width:20px;border-radius:3px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem;}
+  .nav-links{display:none!important;}
+  .steps-layout,.dir-panel.active,.feat-card.large{grid-template-columns:1fr;}
+  .features-grid,.voices-grid{grid-template-columns:1fr;}
+  .feat-card.large{grid-column:span 1;}
+  .dir-tabs{flex-wrap:wrap;border-radius:1rem;}
+  .trust-strip{gap:1.5rem;padding:1rem 1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ GLOBAL NAV ══ -->
+<nav id="main-nav">
+  <a class="nav-logo" onclick="goHome()">
+    <span class="dot"></span>
+    Stillwater · 心湖
+  </a>
+  <div class="nav-right">
+    <!-- shown only on landing mode -->
+    <span class="nav-skip" id="nav-skip-btn" onclick="skipToSite()">跳过</span>
+    <!-- shown only on site mode -->
+    <ul class="nav-links">
+      <li><a href="#how">如何运作</a></li>
+      <li><a href="#features">核心功能</a></li>
+      <li><a href="#privacy">隐私承诺</a></li>
+      <li><a href="#voices">用户心声</a></li>
+      <li><a href="#directions-site">疗愈路径</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ══ LANDING ══ -->
+<div id="landing">
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="ripple-container">
+      <div class="ripple"></div><div class="ripple"></div>
+      <div class="ripple"></div><div class="ripple"></div>
+    </div>
+    <span class="hero-tag">你的思维同伴 · 情绪疗愈空间</span>
+    <h1 class="hero-title">只需说话<br><em>60 秒</em></h1>
+    <p class="hero-sub">无需整理思绪，无需任何结构。<br>只是说出心里的一切——<br>我们帮你看见自己，真正地。</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="startOnboarding()">立即开始</button>
+    </div>
+    <div class="hero-scroll-hint">
+      <div class="scroll-line"></div>
+      <span class="scroll-text">向下了解</span>
+    </div>
+  </section>
+
+  <!-- TRUST STRIP -->
+  <div class="trust-strip">
+    <div class="trust-item"><div class="trust-dot"></div>不是聊天机器人</div>
+    <div class="trust-item"><div class="trust-dot"></div>不是心理治疗</div>
+    <div class="trust-item"><div class="trust-dot"></div>不是结构化日记</div>
+    <div class="trust-item"><div class="trust-dot"></div>数据不离开你的设备</div>
+    <div class="trust-item"><div class="trust-dot"></div>完全免费，无需注册</div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="container">
+      <p class="section-label reveal">如何运作</p>
+      <h2 class="section-title reveal">三步，看见内心真实的自己</h2>
+      <p class="section-desc reveal">我们相信，最深的疗愈来自于被真正理解。不是被引导，不是被建议——而是被看见。</p>
+      <div class="steps-layout reveal">
+        <div class="steps-list">
+          <div class="step active" onclick="setStep(0)">
+            <div class="step-num">一</div>
+            <div class="step-content">
+              <h3>随心说话，最多 60 秒</h3>
+              <p>无需提示，无需结构。工作压力、睡前焦虑、一件小事——任何都可以说。说话本身已经是一种释放。</p>
+            </div>
+          </div>
+          <div class="step" onclick="setStep(1)">
+            <div class="step-num">二</div>
+            <div class="step-content">
+              <h3>收到三份洞察</h3>
+              <p>你真正在纠结什么 · 跨会话发现的思维模式 · 一个值得带走慢慢想的问题。不给答案，而是给你看见自己的镜子。</p>
+            </div>
+          </div>
+          <div class="step" onclick="setStep(2)">
+            <div class="step-num">三</div>
+            <div class="step-content">
+              <h3>随时间，认识更真实的自己</h3>
+              <p>每一次会话都是一块拼图。数周之后，你会开始发现自己的情绪规律、思维习惯，以及从未意识到的内心需求。</p>
+            </div>
+          </div>
+        </div>
+        <div class="step-visual reveal">
+          <div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(138,158,140,0.15) 0%,transparent 70%);"></div>
+          <div class="phone-mockup">
+            <div class="phone-bar"></div>
+            <p style="text-align:center;font-size:0.7rem;color:var(--mist);margin-bottom:1.2rem;letter-spacing:0.08em">今天，说说吧</p>
+            <div class="phone-mic">
+              <div class="phone-mic-rings"></div>
+              <div class="phone-mic-rings"></div>
+              <span class="mic-icon">🎙</span>
+            </div>
+            <div class="phone-timer">00:42 / 01:00</div>
+            <div class="phone-wave">
+              <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+              <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+              <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+            </div>
+            <div style="margin-top:1.2rem;background:var(--sage-pale);border-radius:0.75rem;padding:0.75rem">
+              <div style="font-size:0.65rem;color:var(--sage);letter-spacing:0.1em;margin-bottom:0.3rem">洞察</div>
+              <div style="font-family:var(--font-serif);font-size:0.78rem;color:var(--ink);line-height:1.6;font-style:italic">"你不是在担心结果，你是在担心不被认可。"</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="container">
+      <p class="section-label reveal">核心功能</p>
+      <h2 class="section-title reveal">每一个设计，都是为了<em style="font-style:italic;color:var(--sage)">你</em></h2>
+      <div class="features-grid">
+        <div class="feat-card large reveal">
+          <div>
+            <div class="feat-icon">🧠</div>
+            <h3>思维模式追踪</h3>
+            <p>不只是今天的感受，而是跨越时间发现"你总是这样想"。Stillwater 会在多次会话后告诉你：你最常在什么情境下感到焦虑，你的思维是否总是陷入同一个漩涡。</p>
+            <p style="margin-top:0.8rem;font-size:0.8rem;color:var(--sage)">→ 7天后开始看见规律，30天后认识全新的自己</p>
+          </div>
+          <div class="insight-preview">
+            <div class="insight-tag">本周思维模式</div>
+            <div class="insight-text">"你在 3 次会话中提到了'不确定'。真正的担忧，似乎不是事情本身，而是失控感。"</div>
+            <div class="insight-q">💭 如果一切都按你期待的发展，你真正想要的是什么？</div>
+          </div>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">🔒</div>
+          <h3>设备端处理，绝对隐私</h3>
+          <p>你说的一切，只属于你。语音转录在你的设备本地完成，不上传服务器。你最脆弱的时刻，只有你自己知道。</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">⏱</div>
+          <h3>60 秒，零压力</h3>
+          <p>你不需要空出 30 分钟、打开日记本、整理语言。只需要一分钟和一段真实的声音。这是为忙碌的真实生活设计的。</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">🌊</div>
+          <h3>情绪起伏可视化</h3>
+          <p>用温柔的可视化呈现你的情绪波动。不是冷冰冰的数据，而是像湖面一样，映出你内心的涟漪。</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">❓</div>
+          <h3>一个值得带走的问题</h3>
+          <p>每次会话结束，Stillwater 不给建议，只给一个问题。这个问题可能在你睡前、通勤中慢慢发酵，成为真正的领悟。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVACY -->
+  <section id="privacy">
+    <div class="container">
+      <p class="section-label reveal">隐私承诺</p>
+      <h2 class="section-title reveal" style="color:var(--cream)">你最脆弱的时刻<br>只属于你自己</h2>
+      <p class="section-desc reveal" style="color:rgba(250,248,244,0.6)">在这个时代，你的内心世界是最珍贵的隐私。我们用技术守护它。</p>
+      <div class="privacy-grid">
+        <div class="priv-card reveal"><div class="priv-icon">📱</div><h4>设备端转录</h4><p>你的声音在手机内部直接转为文字，不经过任何服务器。你说的话，只在你的设备上存在。</p></div>
+        <div class="priv-card reveal"><div class="priv-icon">🚫</div><h4>不售卖数据</h4><p>我们不追踪你，不分析你，不向任何第三方出售你的信息。永远不会。</p></div>
+        <div class="priv-card reveal"><div class="priv-icon">🗑</div><h4>随时删除</h4><p>你的全部历史记录，可以一键永久删除。你的过去，只由你决定是否保留。</p></div>
+        <div class="priv-card reveal"><div class="priv-icon">🔐</div><h4>本地加密存储</h4><p>所有会话数据在设备上加密存储，即使手机丢失也无法被他人读取。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VOICES -->
+  <section id="voices">
+    <div class="container">
+      <p class="section-label reveal" style="text-align:center">用户心声</p>
+      <h2 class="section-title reveal" style="text-align:center">他们找到了自己的湖面</h2>
+      <div class="voices-grid">
+        <div class="voice-card reveal">
+          <div class="quote-mark">"</div>
+          <p class="voice-text">我以为我只是在抱怨工作，但 Stillwater 告诉我，我真正恐惧的是失去掌控感。这句话让我坐了很久。</p>
+          <div class="voice-meta">
+            <div class="voice-avatar" style="background:#EFF4EE;color:#3B6D11">晓</div>
+            <div><div class="voice-name">林晓芸</div><div class="voice-role">产品经理 · 使用 6 周</div></div>
+          </div>
+        </div>
+        <div class="voice-card reveal">
+          <div class="quote-mark">"</div>
+          <p class="voice-text">每次对着手机说 60 秒，感觉像是把心里的石头放下了一块。那个"值得带走的问题"，有时候比所有建议都管用。</p>
+          <div class="voice-meta">
+            <div class="voice-avatar" style="background:#FBEAF0;color:#72243E">承</div>
+            <div><div class="voice-name">张承远</div><div class="voice-role">自由职业者 · 使用 3 个月</div></div>
+          </div>
+        </div>
+        <div class="voice-card reveal">
+          <div class="quote-mark">"</div>
+          <p class="voice-text">我试过冥想 App、日记本、甚至心理咨询。Stillwater 是唯一一个让我觉得"不是在完成任务"的工具。它就是陪着我。</p>
+          <div class="voice-meta">
+            <div class="voice-avatar" style="background:#EEEDFE;color:#3C3489">慧</div>
+            <div><div class="voice-name">陈思慧</div><div class="voice-role">大学生 · 使用 2 个月</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIRECTIONS (site scroll version) -->
+  <section id="directions-site">
+    <div class="container">
+      <p class="section-label reveal" style="text-align:center">三种体验方式</p>
+      <h2 class="section-title reveal" style="text-align:center;max-width:520px;margin:0 auto 0.5rem">选择最适合你的<br><em style="font-style:italic;color:var(--sage)">疗愈路径</em></h2>
+      <p class="section-desc reveal" style="text-align:center;margin:0 auto">每个人通往内心的路都不一样。Stillwater 为你准备了三条路。</p>
+      <div class="dir-tabs reveal">
+        <button class="dir-tab active" onclick="switchDir(0)">🕯 情绪释放仪式</button>
+        <button class="dir-tab" onclick="switchDir(1)">📊 情绪数据洞察</button>
+        <button class="dir-tab" onclick="switchDir(2)">🌐 匿名共鸣广场</button>
+      </div>
+      <div class="dir-panels">
+        <div class="dir-panel active" id="dir-0">
+          <div class="dir-panel-text">
+            <div class="dir-eyebrow" style="color:var(--sage)">方向 A · 情绪释放</div>
+            <h3>给自己一个<br>每天的小仪式</h3>
+            <p>不需要改变生活，只需要每天留出一分钟。一次呼吸引导、一段自由倾诉、一个轻轻放下的动作——仪式感本身就是疗愈。</p>
+            <p>适合：长期感到压抑却不知从何说起的人。容易焦虑、睡前脑子停不下来的你。</p>
+            <div class="dir-tags">
+              <span class="dir-tag" style="color:var(--sage);border-color:var(--sage-light)">呼吸引导</span>
+              <span class="dir-tag" style="color:var(--sage);border-color:var(--sage-light)">声音倾诉</span>
+              <span class="dir-tag" style="color:var(--sage);border-color:var(--sage-light)">每日仪式</span>
+              <span class="dir-tag" style="color:var(--sage);border-color:var(--sage-light)">正念放松</span>
+            </div>
+          </div>
+          <div class="dir-visual ritual-visual">
+            <div class="ritual-circle"><div class="ritual-ring"></div><div class="ritual-ring"></div>🕯</div>
+            <div class="ritual-steps">
+              <div class="r-step">🌬 呼吸</div>
+              <span style="color:var(--sage-light)">→</span>
+              <div class="r-step">🎙 倾诉</div>
+              <span style="color:var(--sage-light)">→</span>
+              <div class="r-step">🍃 放下</div>
+            </div>
+          </div>
+        </div>
+        <div class="dir-panel" id="dir-1">
+          <div class="dir-panel-text">
+            <div class="dir-eyebrow" style="color:#185FA5">方向 B · 数据洞察</div>
+            <h3>用数据看见<br>你的情绪规律</h3>
+            <p>情绪不是随机的，它有规律、有触发点、有周期。Stillwater 把你的每次倾诉转化为可视化数据，让你像科学家一样理解自己的内心。</p>
+            <p>适合：习惯用理性分析问题、想要量化自我成长的你。</p>
+            <div class="dir-tags">
+              <span class="dir-tag" style="color:#185FA5;border-color:#B5D4F4">情绪追踪</span>
+              <span class="dir-tag" style="color:#185FA5;border-color:#B5D4F4">趋势图表</span>
+              <span class="dir-tag" style="color:#185FA5;border-color:#B5D4F4">模式分析</span>
+              <span class="dir-tag" style="color:#185FA5;border-color:#B5D4F4">周报洞察</span>
+            </div>
+          </div>
+          <div class="dir-visual data-visual">
+            <div class="data-chart">
+              <div class="data-chart-title">本月情绪走势</div>
+              <div class="chart-bars">
+                <div class="chart-bar"></div><div class="chart-bar"></div><div class="chart-bar"></div>
+                <div class="chart-bar"></div><div class="chart-bar"></div><div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+              </div>
+            </div>
+            <div class="data-insight-row">
+              <div class="data-chip"><strong>23次</strong>本月倾诉</div>
+              <div class="data-chip"><strong>↑ 34%</strong>平静感提升</div>
+              <div class="data-chip"><strong>3个</strong>核心模式</div>
+            </div>
+          </div>
+        </div>
+        <div class="dir-panel" id="dir-2">
+          <div class="dir-panel-text">
+            <div class="dir-eyebrow" style="color:#993556">方向 C · 匿名共鸣</div>
+            <h3>你不是一个人<br>在承受这一切</h3>
+            <p>有些话说不出口，却渴望被人听见。在这里，你可以匿名分享一句心声——不评判，不建议，只是陪伴。当别人按下"我也是"，你会知道，你从不孤单。</p>
+            <p>适合：渴望连接却害怕暴露、在人群中感到孤独的你。</p>
+            <div class="dir-tags">
+              <span class="dir-tag" style="color:#993556;border-color:#F4C0D1">完全匿名</span>
+              <span class="dir-tag" style="color:#993556;border-color:#F4C0D1">情感共鸣</span>
+              <span class="dir-tag" style="color:#993556;border-color:#F4C0D1">无评判空间</span>
+              <span class="dir-tag" style="color:#993556;border-color:#F4C0D1">陪伴感</span>
+            </div>
+          </div>
+          <div class="dir-visual community-visual">
+            <div class="comm-bubble"><div class="text">"有时候我不知道自己为什么难过，就是难过。"</div><div class="meta"><span class="comm-heart">♥ 142 人有同感</span></div></div>
+            <div class="comm-bubble right"><div class="text">"我也是。谢谢你说出来了。"</div><div class="meta">匿名朋友</div></div>
+            <div class="comm-bubble"><div class="text">"压力大的时候，总觉得自己在撑着一切。"</div><div class="meta"><span class="comm-heart">♥ 89 人有同感</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>
+      <div class="footer-logo">Stillwater · 心湖</div>
+      <div class="footer-tagline">你的思维同伴，你的内心镜子</div>
+    </div>
+    <ul class="footer-links">
+      <li><a href="#">关于我们</a></li>
+      <li><a href="#">隐私政策</a></li>
+      <li><a href="#">使用条款</a></li>
+      <li><a href="#">联系我们</a></li>
+    </ul>
+    <div style="font-size:0.78rem">© 2026 Stillwater · 用心制作</div>
+  </footer>
+
+</div><!-- /landing -->
+
+<!-- ══ ONBOARDING OVERLAY ══ -->
+<div id="onboarding">
+
+  <!-- Step 1: 开始你的旅程 -->
+  <div class="ob-step active" id="ob-step-1">
+    <div class="ob-dots"><div class="ob-dot active"></div><div class="ob-dot"></div></div>
+    <h2 class="ob-title">开始你的<em>旅程</em></h2>
+    <p class="ob-sub">你不需要准备任何东西。<br>只需要此刻的你，和 60 秒的时间。</p>
+    <button class="ob-big-btn" onclick="goToStep2()">下一步 →</button>
+    <span class="ob-next-hint">选择你的疗愈路径</span>
+  </div>
+
+  <!-- Step 2: 选择疗愈路径 -->
+  <div class="ob-step" id="ob-step-2">
+    <div class="ob-dots"><div class="ob-dot"></div><div class="ob-dot active"></div></div>
+    <h2 class="ob-path-title">选择你的<em style="font-style:italic;color:var(--sage)">疗愈路径</em></h2>
+    <p class="ob-path-sub">你随时可以切换，没有对错之分</p>
+    <div class="path-cards">
+      <div class="path-card" onclick="selectPath(this,0)">
+        <div class="path-icon">🕯</div>
+        <div class="path-text">
+          <h4>情绪释放仪式</h4>
+          <p>呼吸 · 倾诉 · 放下 · 每天一分钟仪式感</p>
+        </div>
+        <span class="path-arrow">→</span>
+      </div>
+      <div class="path-card" onclick="selectPath(this,1)">
+        <div class="path-icon">📊</div>
+        <div class="path-text">
+          <h4>情绪数据洞察</h4>
+          <p>追踪 · 分析 · 可视化 · 用数据认识自己</p>
+        </div>
+        <span class="path-arrow">→</span>
+      </div>
+      <div class="path-card" onclick="selectPath(this,2)">
+        <div class="path-icon">🌐</div>
+        <div class="path-text">
+          <h4>匿名共鸣广场</h4>
+          <p>倾听 · 共鸣 · 匿名 · 你不是一个人</p>
+        </div>
+        <span class="path-arrow">→</span>
+      </div>
+    </div>
+    <div class="ob-actions">
+      <button class="ob-enter-btn" id="ob-enter-btn" onclick="enterSite()">进入心湖 →</button>
+      <button class="ob-skip-path" onclick="enterSite()">跳过，直接进入</button>
+    </div>
+  </div>
+
+</div><!-- /onboarding -->
+
+<script>
+/* ── STATE ── */
+let selectedPath = -1;
+
+/* ── NAV HELPERS ── */
+function goHome(){
+  document.getElementById('onboarding').classList.remove('active');
+  document.getElementById('landing').style.display='block';
+  document.getElementById('main-nav').classList.remove('site-mode');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ── ONBOARDING FLOW ── */
+function startOnboarding(){
+  document.getElementById('onboarding').classList.add('active');
+  document.getElementById('ob-step-1').classList.add('active');
+  document.getElementById('ob-step-2').classList.remove('active');
+  selectedPath = -1;
+  document.querySelectorAll('.path-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('ob-enter-btn').classList.remove('ready');
+}
+
+function goToStep2(){
+  document.getElementById('ob-step-1').classList.remove('active');
+  document.getElementById('ob-step-2').classList.add('active');
+}
+
+function selectPath(el, idx){
+  document.querySelectorAll('.path-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPath = idx;
+  document.getElementById('ob-enter-btn').classList.add('ready');
+}
+
+function enterSite(){
+  document.getElementById('onboarding').classList.remove('active');
+  document.getElementById('landing').style.display='block';
+  document.getElementById('main-nav').classList.add('site-mode');
+  // scroll to the right section
+  const target = selectedPath >= 0 ? '#directions-site' : '#how';
+  setTimeout(()=>{
+    const el = document.querySelector(target);
+    if(el) el.scrollIntoView({behavior:'smooth'});
+    // if path selected, highlight that tab
+    if(selectedPath >= 0) switchDir(selectedPath);
+  }, 100);
+}
+
+function skipToSite(){
+  document.getElementById('main-nav').classList.add('site-mode');
+  window.scrollTo({top:0,behavior:'instant'});
+  setTimeout(()=>{
+    document.querySelector('#how').scrollIntoView({behavior:'smooth'});
+  },50);
+}
+
+/* ── DIRECTION TABS ── */
+function switchDir(i){
+  document.querySelectorAll('.dir-tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));
+  document.querySelectorAll('.dir-panel').forEach((p,idx)=>p.classList.toggle('active',idx===i));
+}
+
+/* ── HOW IT WORKS STEPS ── */
+const steps = document.querySelectorAll('.step');
+function setStep(i){steps.forEach((s,idx)=>s.classList.toggle('active',idx===i));}
+let stepIdx=0;
+setInterval(()=>{stepIdx=(stepIdx+1)%steps.length;setStep(stepIdx);},3500);
+
+/* ── SCROLL REVEAL ── */
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting) setTimeout(()=>e.target.classList.add('visible'),i*80);
+  });
+},{threshold:0.1});
+reveals.forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>
