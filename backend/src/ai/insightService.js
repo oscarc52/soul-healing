@@ -1,6 +1,6 @@
 import { hasCrisisRisk, pickMockInsight } from '../utils/insightMock.js';
 import { callAiProvider } from './provider.js';
-import { validateInsightPayload } from './validateInsight.js';
+import { parseAiJsonContent, validateInsightPayload } from './validateInsight.js';
 
 const SAFETY_MESSAGE = '你刚才提到的内容包含较高现实风险。请立刻联系身边可信任的人，或当地紧急援助渠道。';
 
@@ -48,7 +48,7 @@ function buildAiResult(payload) {
   };
 }
 
-export async function generateInsight({ transcript, anonymousId, durationSeconds, timezone }) {
+export async function generateInsight({ transcript, anonymousId, durationSeconds, timezone, fetchImpl, signal }) {
   if (hasCrisisRisk(transcript)) {
     return buildSafetyResult();
   }
@@ -57,17 +57,26 @@ export async function generateInsight({ transcript, anonymousId, durationSeconds
     transcript,
     anonymousId,
     durationSeconds,
-    timezone
+    timezone,
+    fetchImpl,
+    signal
   });
 
   if (!providerResult.ok) {
     return buildMockResult(transcript);
   }
 
-  const validation = validateInsightPayload(providerResult.data);
+  const parsed = parseAiJsonContent(providerResult.rawContent);
+
+  if (!parsed.ok) {
+    console.warn('[Xinhu AI] AI response was not valid JSON; fallback to mock.', parsed.error.code);
+    return buildMockResult(transcript);
+  }
+
+  const validation = validateInsightPayload(parsed.data);
 
   if (!validation.ok) {
-    console.warn('[Xinhu AI] Invalid AI insight payload; fallback to mock.', validation.error);
+    console.warn('[Xinhu AI] Invalid AI insight payload; fallback to mock.', validation.error.code);
     return buildMockResult(transcript);
   }
 

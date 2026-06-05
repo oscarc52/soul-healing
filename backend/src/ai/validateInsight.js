@@ -28,6 +28,28 @@ function normalizeText(value) {
   return typeof value === 'string' ? value.trim() : '';
 }
 
+export function parseAiJsonContent(content) {
+  const text = normalizeText(content);
+
+  if (!text) {
+    return validationError('AI_JSON_PARSE_ERROR', 'AI 返回内容不是合法 JSON');
+  }
+
+  const withoutFence = text
+    .replace(/^```(?:json)?\s*/i, '')
+    .replace(/\s*```$/i, '')
+    .trim();
+
+  try {
+    return {
+      ok: true,
+      data: JSON.parse(withoutFence)
+    };
+  } catch {
+    return validationError('AI_JSON_PARSE_ERROR', 'AI 返回内容不是合法 JSON');
+  }
+}
+
 function validateCardText(value, fieldName) {
   const text = normalizeText(value);
 

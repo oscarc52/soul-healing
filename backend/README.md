@@ -256,10 +256,36 @@ AI_BASE_URL=
 AI_MODEL=
 AI_TIMEOUT_MS=12000
 AI_ENABLED=false
+AI_TEMPERATURE=0.4
+AI_MAX_TOKENS=600
+AI_FORCE_JSON=true
 ```
 
 Run the fallback integration check:
 
 ```bash
 npm run ai:fallback
+```
+
+## v0.4 OpenAI Compatible Provider
+
+The backend now includes the OpenAI compatible provider code path. It is still safe by default:
+
+- `AI_ENABLED=false` means the backend does not call a real AI provider.
+- If `AI_API_KEY`, `AI_BASE_URL`, or `AI_MODEL` is missing, the backend falls back to mock insight generation.
+- Provider failures, timeout, HTTP errors, invalid JSON, empty choices, empty content, and validation failures all fall back to mock insight generation.
+- Local crisis keyword detection still runs before any provider call.
+- `AI_FORCE_JSON=true` sends `response_format: { "type": "json_object" }`.
+- If a provider does not support `response_format`, set `AI_FORCE_JSON=false`.
+- `AI_TEMPERATURE` defaults to `0.4`.
+- `AI_MAX_TOKENS` defaults to `600`.
+- Real AI usage sends transcript text to the configured third-party AI provider.
+- The formal privacy wording must be updated before enabling AI in production.
+- Do not commit `.env`.
+- Current provider tests use fake fetch and do not call a real network endpoint.
+
+Run the provider integration check:
+
+```bash
+npm run ai:provider
 ```
