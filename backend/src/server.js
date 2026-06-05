@@ -19,6 +19,7 @@ import {
 import { closeDatabase, initDatabase } from './db/sqlite.js';
 import { validateFeedbackPayload } from './utils/feedback.js';
 import { buildPatterns } from './utils/patterns.js';
+import { loadEnv } from './env/loadEnv.js';
 
 const DEFAULT_PORT = 3001;
 const DEFAULT_ANONYMOUS_ID = 'anonymous_mock_user';
@@ -453,6 +454,14 @@ export function buildServer() {
 }
 
 function start() {
+  const envResult = loadEnv();
+
+  if (envResult.loaded) {
+    console.log('[Xinhu env] Loaded backend/.env');
+  } else {
+    console.log('[Xinhu env] No backend/.env found, using process environment.');
+  }
+
   initDatabase();
 
   const server = buildServer();

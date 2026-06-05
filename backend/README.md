@@ -289,3 +289,29 @@ Run the provider integration check:
 ```bash
 npm run ai:provider
 ```
+
+## Local .env Loader
+
+The backend automatically reads `backend/.env` during server startup. This loader is zero-dependency and only fills missing `process.env` values; terminal environment variables have higher priority than values in `backend/.env`.
+
+`backend/.env` is ignored by git. Do not commit real API keys, do not paste them into chat, and do not ask tools to echo them back.
+
+Example local-only `backend/.env`:
+
+```env
+AI_ENABLED=true
+AI_PROVIDER=openai_compatible
+AI_API_KEY=你的真实 key，只能本机填写，不要发给任何人
+AI_BASE_URL=https://你的-provider-base-url/v1
+AI_MODEL=你的模型名
+AI_TIMEOUT_MS=12000
+AI_TEMPERATURE=0.4
+AI_MAX_TOKENS=600
+AI_FORCE_JSON=true
+```
+
+Run the loader test:
+
+```bash
+npm run env:test
+```

@@ -8,6 +8,7 @@
     "start": "node src/server.js",
     "smoke": "node scripts/smoke-test.js",
     "ai:fallback": "node scripts/ai-fallback-test.js",
-    "ai:provider": "node scripts/ai-provider-test.js"
+    "ai:provider": "node scripts/ai-provider-test.js",
+    "env:test": "node scripts/env-loader-test.js"
   }
 }
