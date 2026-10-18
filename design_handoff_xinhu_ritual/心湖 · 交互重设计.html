@@ -60,10 +60,16 @@ nav.hidden{transform:translateY(-100%);}
 
 /* ── HERO ── */
 #hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 4rem;position:relative;overflow:hidden;}
-.hero-bg{position:absolute;inset:0;transition:transform 0.6s ease-out;background:
+.hero-bg{position:absolute;inset:0;z-index:0;transition:transform 0.6s ease-out;background:
+  radial-gradient(ellipse 48% 58% at 50% 48%,rgba(250,248,244,0.88) 0%,rgba(250,248,244,0.68) 46%,rgba(250,248,244,0.12) 100%),
+  linear-gradient(180deg,rgba(250,248,244,0.30) 0%,rgba(250,248,244,0.10) 42%,rgba(250,248,244,0.08) 72%,rgba(250,248,244,0.30) 100%),
   radial-gradient(ellipse 80% 60% at 20% 80%,rgba(138,158,140,0.13) 0%,transparent 60%),
   radial-gradient(ellipse 60% 80% at 80% 20%,rgba(184,169,154,0.11) 0%,transparent 60%),
-  radial-gradient(ellipse 40% 40% at 50% 50%,rgba(232,168,124,0.06) 0%,transparent 60%);}
+  radial-gradient(ellipse 40% 40% at 50% 50%,rgba(232,168,124,0.06) 0%,transparent 60%),
+  url("./assets/xinhu-lake-hero.webp") center/cover no-repeat;}
+#hero>.hero-glow,#hero>.ripple-container{z-index:1;}
+#hero>.hero-tag,#hero>.hero-title,#hero>.hero-sub,#hero>.hero-actions{position:relative;z-index:2;}
+#hero>.hero-scroll-hint{z-index:2;}
 .hero-glow{position:absolute;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(138,158,140,0.16) 0%,transparent 65%);filter:blur(20px);pointer-events:none;transition:transform 0.5s cubic-bezier(.22,1,.36,1),opacity 0.6s;opacity:0;mix-blend-mode:multiply;}
 .ripple-container{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:900px;height:350px;pointer-events:none;overflow:hidden;}
 .ripple{position:absolute;bottom:-60px;left:50%;transform:translateX(-50%);border-radius:50%;border:1px solid rgba(138,158,140,0.25);animation:ripple-out 8s ease-out infinite;}
