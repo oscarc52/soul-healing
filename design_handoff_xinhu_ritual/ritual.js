@@ -115,8 +115,8 @@
     </div>
     <div class="rt-stage">
       <div class="rt-eyebrow" id="rt-eyebrow">入静</div>
-      <div class="rt-prompt" id="rt-prompt">先陪自己，深呼吸三次</div>
-      <div class="rt-sub" id="rt-sub">跟随这颗光球，吸气时它会舒展，呼气时它会收拢。<br>当你觉得安定了，就开始说。</div>
+      <div class="rt-prompt" id="rt-prompt">给自己一点时间，慢慢呼吸</div>
+      <div class="rt-sub" id="rt-sub">跟随光球慢慢呼吸。<br>准备好后，再开始表达。你可以随时结束这次会话。</div>
       <div class="rt-center">
         <svg class="rt-ringsvg" viewBox="0 0 300 300">
           <circle class="rt-ring-track" cx="150" cy="150" r="138" stroke-width="2"></circle>
@@ -163,17 +163,17 @@
 
   /* ── insight content sets ── */
   const SETS=[
-    {s:'你说的是时间不够，但你真正在意的，也许是怕辜负了对自己的期待。',
-     p:'描述压力时，你很少提到自己想要什么——多是别人需要什么。',
+    {s:'你提到时间不够和不想辜负期待；这两件事，对你来说有关联吗？',
+     p:'这段表达里，你提到别人的需要多过自己的想要。这个观察是否贴合？',
      q:'如果这件事没有任何人会评价你，你还会用同样的方式去做吗？'},
-    {s:'表面上你在烦那件小事，底下藏着的，是"我是不是不够好"的怀疑。',
-     p:'你习惯先照顾好别人的情绪，把自己的放到最后。',
+    {s:'你反复想到这件小事时，心里会不会也冒出"我做得够不够好"的担心？',
+     p:'你似乎很留意周围人的感受；此刻你自己的感受是什么？',
      q:'今天，有没有一件小事，是可以只为你自己做的？'},
-    {s:'你不是累于事情本身，而是累于"必须一个人撑住"的那种感觉。',
+    {s:'你说这段时间很累。除了事情本身，还有哪些部分让你觉得吃力？',
      p:'你很擅长分析，却很少允许自己只是单纯地难过。',
      q:'如果此刻可以向一个人求助，你最想说的第一句话是什么？'},
     {s:'你反复提到"应该"，却很少提到"想要"。',
-     p:'你对别人格外宽容，对自己却异常严厉。',
+     p:'对自己要求很高的时候，你会怎样评价自己？',
      q:'你愿意像对待最好的朋友那样，对自己说一句话吗？'}
   ];
 
@@ -295,8 +295,8 @@
     resetBackendState();
     stage='settle'; root.dataset.stage='settle'; setDot(0);
     elEyebrow.textContent='入静'; elEyebrow.classList.add('in');
-    elPrompt.textContent='先陪自己，深呼吸三次';
-    elSub.innerHTML='跟随这颗光球，吸气时它舒展，呼气时它收拢。<br>当你觉得安定了，就开始说。';
+    elPrompt.textContent='给自己一点时间，慢慢呼吸';
+    elSub.innerHTML='跟随这颗光球，吸气时它舒展，呼气时它收拢。<br>准备好后，再开始表达。你可以随时结束这次会话。';
     elSub.style.opacity='1'; elTimer.style.opacity='0';
     elOrbLabel.style.opacity='1';
     elActions.innerHTML=`<button class="rt-btn" id="rt-go"><span class="bd"></span>我准备好了，开始说</button>`;
@@ -354,8 +354,8 @@
     }catch(e){ usingMic=false; }
 
     elExtra.innerHTML = usingMic
-      ? `<div class="rt-mic-note"><span class="ld"></span>正在聆听你的声音 · 设备本地处理，不上传</div>`
-      : `<div class="rt-mic-note"><span class="ld"></span>未开启麦克风也没关系 · 你可以静静地说，或随时结束</div>`;
+      ? `<div class="rt-mic-note"><span class="ld"></span>正在聆听你的声音 · 语音识别与文字处理方式见隐私说明</div>`
+      : `<div class="rt-mic-note"><span class="ld"></span>未开启麦克风 · 当前会话无法生成语音转写</div>`;
 
     speakStart=performance.now();
     elPrompt.dataset.t=0;
@@ -466,9 +466,9 @@
   function startInsight(){
     stage='insight'; root.dataset.stage='insight'; setDot(2);
     cancelAnimationFrame(raf);
-    elEyebrow.textContent='三份洞察';
+    elEyebrow.textContent='回看线索';
     elPrompt.style.opacity='0';
-    setTimeout(()=>{ elPrompt.textContent='这是此刻的你，在湖面上的倒影'; elPrompt.style.opacity='1'; },350);
+    setTimeout(()=>{ elPrompt.textContent='以下内容只是自我整理的参考，看看哪些贴近你。'; elPrompt.style.opacity='1'; },350);
     elSub.style.opacity='0';
     elTimer.style.opacity='0';
     elOrb.style.transform='scale(.62)';
@@ -478,11 +478,11 @@
     elActions.innerHTML='';
     elExtra.innerHTML=`
       <div class="rt-insights">
-        <div class="rt-card" data-i="0"><div class="ct"><span class="cn">一</span>你真正在纠结的</div><div class="cx">${set.s}</div></div>
-        <div class="rt-card" data-i="1"><div class="ct"><span class="cn">二</span>我注意到的模式</div><div class="cx">${set.p}</div></div>
+        <div class="rt-card" data-i="0"><div class="ct"><span class="cn">一</span>可能关注的焦点</div><div class="cx">${set.s}</div></div>
+        <div class="rt-card" data-i="1"><div class="ct"><span class="cn">二</span>重复出现的线索</div><div class="cx">${set.p}</div></div>
         <div class="rt-card q" data-i="2"><div class="ct"><span class="cn">三</span>带走的问题</div><div class="cx">${set.q}</div></div>
       </div>
-      <div class="rt-saved" id="rt-saved"><span class="sv">✓</span>本次会话已存入你的心湖 · 仅你可见</div>
+      <div class="rt-saved" id="rt-saved"><span class="sv">✓</span>本次会话已保存到记录中 · 数据处理方式见隐私说明</div>
       <div class="rt-actions">
         <button class="rt-btn" id="rt-again"><span class="bd"></span>再说一次</button>
         <button class="rt-btn ghost" id="rt-done">把问题带走，完成</button>
